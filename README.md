@@ -62,9 +62,10 @@ Our system is composed of specialized sub-agents working in a deterministic pipe
 ### 2. Frontend: Vercel
 1. **Import:** Connect your GitHub repo to Vercel.
 2. **Root Dir:** Set to `frontend/`.
-3. **Env Var:** Add `VITE_API_URL` (your Hugging Face Space URL).
-
----
+3. **Env Var:** Add `VITE_API_URL`. 
+   - **Format:** `https://username-space-name.hf.space`
+   - **Example:** `https://arifantarctic7-ai-sales-automation-agent.hf.space`
+4. **Build:** Vercel will build your React app and it will talk to the HF backend.
 
 ## ⚙️ Local Development
 
