@@ -1,3 +1,12 @@
+---
+title: AI Sales Automation Agent
+emoji: 🚀
+colorFrom: indigo
+colorTo: purple
+sdk: docker
+pinned: false
+---
+
 # 🤖 SalesAI: Next-Gen B2B Sales Automation
 
 [![Vite](https://img.shields.io/badge/Frontend-Vite%20%2B%20React-646CFF?style=flat-square&logo=vite)](https://vitejs.dev/)
