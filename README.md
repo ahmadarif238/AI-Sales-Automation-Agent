@@ -1,59 +1,86 @@
-# 🤖 SalesAI: Automated Sales Pipeline
+# 🤖 SalesAI: Next-Gen B2B Sales Automation
 
-An AI-powered "Agent of Agents" system that automates B2B lead generation, enrichment, scoring, outreach, and sales forecasting.
+[![Vite](https://img.shields.io/badge/Frontend-Vite%20%2B%20React-646CFF?style=flat-square&logo=vite)](https://vitejs.dev/)
+[![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688?style=flat-square&logo=fastapi)](https://fastapi.tiangolo.com/)
+[![LLaMA 3](https://img.shields.io/badge/AI-LLaMA%203%20(Groq)-orange?style=flat-square)](https://groq.com/)
+[![Hugging Face](https://img.shields.io/badge/Deploy-Hugging%20Face%20Spaces-yellow?style=flat-square&logo=huggingface)](https://huggingface.co/spaces)
 
-Built with **Vite + React** (Frontend), **FastAPI** (Backend), **DuckDuckGo Search**, **BeautifulSoup4**, and **LLaMA 3** (via Groq).
+### 🚀 Standardizing B2B Prospecting with an "Agent of Agents" Architecture
+
+Manual sales prospecting is slow, repetitive, and expensive. **SalesAI** is an intelligent, automated pipeline that handles the entire sales funnel—from finding raw leads to categorized sales forecasts—using a specialized swarm of 6 AI agents.
 
 ---
 
-## 🏗️ Project Structure
+## 💡 The Problem & The Solution
 
-- `frontend/`: Vite + React application (React 19, Tailwind CSS).
-- `backend/`: FastAPI application with specialized AI agents.
+**The Problem:** Sales teams spend 60% of their time on manual research, finding emails, and qualifying leads instead of actually selling.
+
+**The Solution:** SalesAI automates the "grunt work." You provide a single search query, and the system orchestrates multiple sub-agents to deliver a qualified, scored, and engaged list of prospects.
+
+---
+
+## 🧠 Agent of Agents Architecture
+
+Our system is composed of specialized sub-agents working in a deterministic pipeline:
+
+| Agent | Responsibility |
+| :--- | :--- |
+| **Lead Generator** | Scours the web (DuckDuckGo) for companies matching your target audience. |
+| **Enrichment Agent** | Scrapes websites to extract contact emails and business details. |
+| **Lead Scorer** | Ranks leads based on data quality and ICP (Ideal Customer Profile) fit. |
+| **Engagement Agent** | Crafts and sends personalized outreach emails via Gmail SMTP. |
+| **Reply Monitor** | Tracks incoming responses using Gmail IMAP to detect interest. |
+| **Forecaster** | Uses LLaMA 3 (via Groq) to categorize leads into **Hot**, **Warm**, or **Cold**. |
+
+---
+
+## 🛠️ Technical Stack
+
+- **Frontend:** React 19, Vite, Tailwind CSS, Framer Motion (Animations), Recharts (Analytics).
+- **Backend:** FastAPI, Python 3.11, Docker.
+- **AI/LLM:** LLaMA 3 (Groq Cloud) for high-speed inference.
+- **Data:** Pandas for pipeline state management and CSV-based persistence.
+
+---
 
 ## 🚀 Deployment Guide
 
-### 1. Backend: Hugging Face Spaces
-
-1. Create a new **Space** on Hugging Face.
-2. Select **Docker** as the SDK.
-3. Push the contents of the `backend/` directory to the Space repository (or sync from GitHub).
-4. Hugging Face will automatically build and run the `Dockerfile` on port 7860.
-5. Set the required **Secrets** in your Space settings (see `.env.example` in root or backend).
+### 1. Backend: Hugging Face Spaces (Docker)
+1. **Sync Repo:** Connect your GitHub to a new Docker-based HF Space.
+2. **Set Secrets:** Add `GROQ_API_KEY`, `EMAIL_ADDRESS`, and `EMAIL_PASSWORD` to Space settings.
+3. **Build:** The root `Dockerfile` ensures the FastAPI app builds and runs on port 7860.
 
 ### 2. Frontend: Vercel
-
-1. Import your project into **Vercel**.
-2. Set the root directory to `frontend/`.
-3. Add the following **Environment Variable**:
-   - `VITE_API_URL`: The URL of your Hugging Face Space (e.g., `https://your-space-name.hf.space`).
-4. Build and deploy.
+1. **Import:** Connect your GitHub repo to Vercel.
+2. **Root Dir:** Set to `frontend/`.
+3. **Env Var:** Add `VITE_API_URL` (your Hugging Face Space URL).
 
 ---
 
-## ⚙️ Local Setup
+## ⚙️ Local Development
 
-1. **Clone the Repository**
+1. **Clone & Setup:**
    ```bash
-   git clone https://github.com/yourusername/AI-Sales-Automation-Agent.git
-   cd AI-Sales-Automation-Agent
+   git clone https://github.com/ahmadarif238/AI-Sales-Automation-Agent.git
    ```
 
-2. **Backend Setup**
+2. **Backend:**
    ```bash
    cd backend
    pip install -r requirements.txt
-   # Create .env and add GROQ_API_KEY, EMAIL_ADDRESS, EMAIL_PASSWORD
-   python app.py
+   python app.py # Server starts on http://localhost:7860
    ```
 
-3. **Frontend Setup**
+3. **Frontend:**
    ```bash
    cd frontend
    npm install
-   npm run dev
+   npm run dev # Starts on http://localhost:5173
    ```
 
+---
+
 ## 🧑‍💻 Built By
-Arif Ahmad Khan
-Machine Learning Engineer & AI Automation Builder
+**Arif Ahmad Khan**  
+*Machine Learning Engineer & AI Automation Specialist*  
+[LinkedIn](https://linkedin.com/in/ahmadarif238) | [GitHub](https://github.com/ahmadarif238)
