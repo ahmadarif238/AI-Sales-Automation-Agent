@@ -14,14 +14,16 @@ jobs:
         with:
           fetch-depth: 0
           lfs: true
-      - name: Remove screenshots and other non-essentials
+      - name: Wipe history and push clean state
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
+          rm -rf .git
           rm -rf screenshots/
+          git init
           git config --global user.email "github-actions@github.com"
           git config --global user.name "github-actions"
           git add .
-          git commit -m "Exclude screenshots for HF sync" || echo "No changes to commit"
-      - name: Push to hub
-        env:
-          HF_TOKEN: ${{ secrets.HF_TOKEN }}
-        run: git push --force https://ArifAntarctic7:$HF_TOKEN@huggingface.co/spaces/ArifAntarctic7/AI-Sales-Automation-Agent main
+          git commit -m "Clean deployment to Hugging Face"
+          git remote add hf https://ArifAntarctic7:$HF_TOKEN@huggingface.co/spaces/ArifAntarctic7/AI-Sales-Automation-Agent
+          git push --force hf master:main
