@@ -14,6 +14,13 @@ jobs:
         with:
           fetch-depth: 0
           lfs: true
+      - name: Remove screenshots and other non-essentials
+        run: |
+          rm -rf screenshots/
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "github-actions"
+          git add .
+          git commit -m "Exclude screenshots for HF sync" || echo "No changes to commit"
       - name: Push to hub
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
