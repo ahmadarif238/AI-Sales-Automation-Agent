@@ -1,0 +1,12 @@
+requests
+beautifulsoup4
+pandas
+fake_useragent
+ddgs
+python-dotenv
+
+streamlit
+plotly
+fastapi
+uvicorn
+python-multipart

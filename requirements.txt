@@ -1,9 +1,0 @@
-requests
-beautifulsoup4
-pandas
-fake_useragent
-duckduckgo_search
-python-dotenv
-openai
-streamlit
-plotly

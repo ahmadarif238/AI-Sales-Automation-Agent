@@ -1,0 +1,25 @@
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Build outputs
+dist/
+build/
+node_modules/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+.venv/
+
+# Data files (keep the structure, but not the csv data if it contains leads)
+backend/data/*.csv
+!backend/data/.gitkeep
+
+# OS files
+.DS_Store
+Thumbs.db

@@ -1,96 +1,59 @@
-# 🤖 Lindy Sales Automation Agent
+# 🤖 SalesAI: Automated Sales Pipeline
 
-An AI-powered, agent-of-agents system to automate B2B lead generation, enrichment, outreach, and sales forecasting — all in one pipeline.
+An AI-powered "Agent of Agents" system that automates B2B lead generation, enrichment, scoring, outreach, and sales forecasting.
 
-Built in Python using DuckDuckGo Search, Gmail SMTP/IMAP, and LLaMA 3 via [Groq Cloud](https://console.groq.com/).
+Built with **Vite + React** (Frontend), **FastAPI** (Backend), **DuckDuckGo Search**, **BeautifulSoup4**, and **LLaMA 3** (via Groq).
 
 ---
 
-## ⚙️ Setup & Installation
+## 🏗️ Project Structure
+
+- `frontend/`: Vite + React application (React 19, Tailwind CSS).
+- `backend/`: FastAPI application with specialized AI agents.
+
+## 🚀 Deployment Guide
+
+### 1. Backend: Hugging Face Spaces
+
+1. Create a new **Space** on Hugging Face.
+2. Select **Docker** as the SDK.
+3. Push the contents of the `backend/` directory to the Space repository (or sync from GitHub).
+4. Hugging Face will automatically build and run the `Dockerfile` on port 7860.
+5. Set the required **Secrets** in your Space settings (see `.env.example` in root or backend).
+
+### 2. Frontend: Vercel
+
+1. Import your project into **Vercel**.
+2. Set the root directory to `frontend/`.
+3. Add the following **Environment Variable**:
+   - `VITE_API_URL`: The URL of your Hugging Face Space (e.g., `https://your-space-name.hf.space`).
+4. Build and deploy.
+
+---
+
+## ⚙️ Local Setup
 
 1. **Clone the Repository**
-```bash
-git clone https://github.com/yourusername/lindy_sales_agents.git
-cd lindy_sales_agents
+   ```bash
+   git clone https://github.com/yourusername/AI-Sales-Automation-Agent.git
+   cd AI-Sales-Automation-Agent
+   ```
 
-2. Create Your .env File
+2. **Backend Setup**
+   ```bash
+   cd backend
+   pip install -r requirements.txt
+   # Create .env and add GROQ_API_KEY, EMAIL_ADDRESS, EMAIL_PASSWORD
+   python app.py
+   ```
 
-Duplicate the template:
+3. **Frontend Setup**
+   ```bash
+   cd frontend
+   npm install
+   npm run dev
+   ```
 
-cp .env.example .env
-Then fill in your credentials:
-
-EMAIL_ADDRESS → Your Gmail address
-
-EMAIL_PASSWORD → Gmail App Password (not raw password)
-
-GROQ_API_KEY → Get one at console.groq.com
-
-🔐 Your .env file is ignored via .gitignore. Never commit real credentials.
-
-3. Install Python Dependencies
-
-pip install -r requirements.txt
-
-4. Agent Architecture
-This project is an "Agent of Agents" — each sub-agent handles a specialized task in the B2B sales flow:
-
-Agent Script	Role
-lead_generator.py	Searches the web for relevant companies (via DuckDuckGo)
-enrichment_agent.py	Scrapes websites for contact emails
-lead_scorer.py	Scores leads based on email quality and relevance
-engagement_agent.py	Sends personalized emails using Gmail SMTP
-email_reply_collector.py	Tracks email replies using Gmail IMAP
-sales_forecasting_agent.py	Uses Groq's LLaMA 3 to categorize leads as hot, warm, or cold
-
-Each of these agents is orchestrated into a single seamless workflow.
-
-
-5. 🚀 How to Run
-🔁 CLI Pipeline (Interactive)
-python main.py
-You’ll be prompted to enter a search query like:
-
-AI tools for B2B companies
-
-The pipeline will:
-
-Search → Scrape → Score → Email → Track replies → Forecast sales
-
-
-6. 📊 Web App (Streamlit Dashboard)
-streamlit run streamlit_app.py
-From the browser UI, you can:
-
-Enter a search query
-
-View pipeline logs live
-
-See a pie chart of lead forecasts
-
-Explore detailed lead & reply tables
-
-🧠 Powered by Groq Cloud
-The final forecasting step uses Groq's blazing fast inference engine to run Meta’s LLaMA 3–70B model and classify leads as:
-
-🔥 Hot
-
-🌡️ Warm
-
-❄️ Cold
-
-Groq enables zero-shot reasoning at unmatched speed and cost.
-
-💡 Notes & Future Ideas
-You can easily plug in LangChain or Autogen for even more dynamic agents.
-
-Add tracking pixel API for open rate detection.
-
-Extend with Notion/CRM integration or Slack alerts.
-
-🧑‍💻 Built By
+## 🧑‍💻 Built By
 Arif Ahmad Khan
 Machine Learning Engineer & AI Automation Builder
-🔗 LinkedIn | 🌐 Portfolio
-
-
