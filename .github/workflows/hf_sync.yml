@@ -17,4 +17,4 @@ jobs:
       - name: Push to hub
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
-        run: git push https://ahmadarif238:$HF_TOKEN@huggingface.co/spaces/ArifAntarctic7/AI-Sales-Automation-Agent main
+        run: git push https://ArifAntarctic7:$HF_TOKEN@huggingface.co/spaces/ArifAntarctic7/AI-Sales-Automation-Agent main
