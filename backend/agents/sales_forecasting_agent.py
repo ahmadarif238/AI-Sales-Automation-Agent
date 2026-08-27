@@ -13,6 +13,11 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 # Groq API endpoint
 GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
 
+# Groq decommissioned every Llama chat model (2026-08). The free production
+# line-up is now the openai/gpt-oss-* family. Env-overridable so a future
+# rename needs an env edit, not a redeploy.
+GROQ_MODEL = os.getenv("GROQ_MODEL", "openai/gpt-oss-120b")
+
 def categorize_lead(email, reply_text):
     if not reply_text or pd.isna(reply_text):
         return "cold", "No reply received yet."
@@ -36,16 +41,22 @@ Respond in JSON:
     }
 
     payload = {
-        "model": "llama3-70b-8192",
+        "model": GROQ_MODEL,
         "messages": [
             {"role": "system", "content": "You are a helpful sales assistant that classifies leads based on engagement."},
             {"role": "user", "content": prompt}
         ],
-        "temperature": 0.3
+        "temperature": 0.3,
+        # gpt-oss is a reasoning model: hide the chain of thought and ask for a
+        # JSON object, otherwise json.loads() below chokes on the reasoning text.
+        "reasoning_format": "hidden",
+        "reasoning_effort": "low",
+        "response_format": {"type": "json_object"},
+        "max_tokens": 500
     }
 
     try:
-        response = requests.post(GROQ_API_URL, headers=headers, json=payload)
+        response = requests.post(GROQ_API_URL, headers=headers, json=payload, timeout=60)
         response.raise_for_status()
         content = response.json()["choices"][0]["message"]["content"]
         import json
