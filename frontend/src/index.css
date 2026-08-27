@@ -1,38 +1,93 @@
 @import "tailwindcss";
 
+/*
+ * Edifice theme.
+ *
+ * Architectural dark surfaces, a single orange accent, square edges and
+ * condensed display headings. Tailwind v4 reads these `@theme` tokens
+ * directly, so `bg-surface`, `text-accent`, `border-line` and friends are
+ * available as utilities and a palette change stays in this one file.
+ */
+
 @theme {
-    --color-primary-50: #eef2ff;
-    --color-primary-100: #e0e7ff;
-    --color-primary-500: #6366f1;
-    --color-primary-600: #4f46e5;
-    --color-primary-700: #4338ca;
-    --color-surface-glass: rgba(255, 255, 255, 0.7);
-    --color-surface-glass-dark: rgba(17, 24, 39, 0.7);
-    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    --color-canvas: #0d0f12;        /* page background */
+    --color-surface: #14171d;       /* raised panels */
+    --color-card: #1a1e26;          /* cards sitting on a panel */
+    --color-line: #262c38;          /* hairlines and dividers */
+    --color-accent: #ff6a00;        /* primary action / emphasis */
+    --color-accent-hover: #ff7d1a;
+    --color-amber: #e5a823;         /* secondary highlight */
+
+    /* Kept so anything still referencing the old indigo scale renders in the
+       new accent rather than clashing. */
+    --color-primary-50: rgba(255, 106, 0, 0.08);
+    --color-primary-100: rgba(255, 106, 0, 0.14);
+    --color-primary-500: #ff6a00;
+    --color-primary-600: #ff6a00;
+    --color-primary-700: #e65f00;
+
+    --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    --font-heading: 'Syne', 'Plus Jakarta Sans', sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
 }
 
 @layer base {
     body {
-        background: radial-gradient(circle at 10% 20%, rgb(240, 245, 255) 0%, rgb(255, 255, 255) 90%);
-        @apply text-gray-800 font-sans antialiased;
+        background-color: var(--color-canvas);
+        @apply text-[#e5e8f0] font-sans antialiased;
+        overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4 {
+        font-family: var(--font-heading);
+        letter-spacing: -0.01em;
+    }
+
+    code, pre {
+        font-family: var(--font-mono);
+        font-variant-numeric: tabular-nums;
     }
 }
 
 @layer utilities {
+    /* The old glass utilities were white-on-light. Same names, dark treatment,
+       so existing markup keeps working without a rename. */
     .glass {
-        @apply bg-white/70 backdrop-blur-lg border border-white/20 shadow-xl;
+        @apply bg-[#14171d]/80 backdrop-blur-lg border border-[#262c38] shadow-xl;
     }
 
     .glass-card {
-        @apply bg-white/60 backdrop-blur-md border border-white/40 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-1;
+        @apply bg-[#1a1e26]/80 backdrop-blur-md border border-[#262c38] transition-all duration-300 hover:border-[#ff6a00]/40 hover:-translate-y-0.5;
     }
 
     .text-gradient {
-        @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-purple-600;
+        @apply bg-clip-text text-transparent bg-gradient-to-r from-[#ff6a00] to-[#e5a823];
+    }
+
+    /* Small uppercase label that precedes a heading. */
+    .eyebrow {
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        @apply text-[#ff6a00];
+    }
+
+    /* Architectural background motifs. */
+    .grid-pattern {
+        background-size: 40px 40px;
+        background-image:
+            linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    }
+
+    .dot-pattern {
+        background-size: 24px 24px;
+        background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
     }
 
     .custom-scrollbar::-webkit-scrollbar {
-        width: 6px;
+        width: 8px;
     }
 
     .custom-scrollbar::-webkit-scrollbar-track {
@@ -40,10 +95,22 @@
     }
 
     .custom-scrollbar::-webkit-scrollbar-thumb {
-        @apply bg-gray-300 rounded-full;
+        @apply bg-[#262c38];
     }
 
     .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-        @apply bg-gray-400;
+        @apply bg-[#ff6a00];
     }
+}
+
+/* Recharts draws its own SVG text, which does not inherit the body colour. */
+.recharts-cartesian-axis-tick text,
+.recharts-legend-item-text {
+    fill: #8b93a5 !important;
+    color: #8b93a5 !important;
+    font-size: 11px;
+}
+
+.recharts-cartesian-grid line {
+    stroke: rgba(255, 255, 255, 0.06);
 }
