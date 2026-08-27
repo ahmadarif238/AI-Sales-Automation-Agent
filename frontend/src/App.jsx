@@ -511,9 +511,9 @@ function App() {
           <div className="glass p-1 rounded-none shadow-xl ring-1 ring-black/5">
             <div className="bg-card/80 rounded-none p-6 md:p-8 backdrop-blur-sm">
               <div className="max-w-3xl mx-auto text-center space-y-6">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 border border-accent/30 text-accent text-sm font-medium">
+                <div className="inline-flex items-center gap-2 text-accent">
                   <Sparkles className="w-4 h-4" />
-                  <span>New Campaign Wizard</span>
+                  <span className="eyebrow">New Campaign Wizard</span>
                 </div>
                 <h2 className="text-2xl md:text-3xl font-semibold text-white">
                   What leads are we targeting today?
