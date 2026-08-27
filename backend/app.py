@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import pandas as pd
+import numpy as np
 import os
 import sys
 
@@ -92,32 +93,46 @@ def run_pipeline(request: PipelineRequest, background_tasks: BackgroundTasks):
 def get_status():
     return pipeline_state
 
+def _csv_records(path: str):
+    """Read a CSV into JSON-safe records.
+
+    The previous `df.where(pd.notnull(df), None)` looked like it replaced
+    missing values, but on a float column pandas coerces the None straight back
+    to NaN -- so NaN and inf survived. Starlette serialises responses with
+    allow_nan=False, so /api/data/leads returned
+    "ValueError: Out of range float values are not JSON compliant" (HTTP 500)
+    whenever a scraped lead had a missing numeric field, which was almost
+    always. That 500 is why the Leads, Dashboard and Analytics screens rendered
+    empty even after the pipeline had finished successfully.
+
+    Casting to object first stops the coercion, and inf is mapped to NaN before
+    the replacement so it is nulled out too.
+    """
+    if not os.path.exists(path):
+        return []
+    try:
+        df = pd.read_csv(path)
+    except Exception as exc:  # noqa: BLE001 - a malformed CSV must not 500
+        print(f"[!] Could not read {path}: {exc}")
+        return []
+    df = df.replace([np.inf, -np.inf], np.nan)
+    return df.astype(object).where(pd.notnull(df), None).to_dict(orient="records")
+
+
 @app.get("/api/data/forecast")
 def get_forecast():
-    path = "data/leads_forecasted.csv"
-    if os.path.exists(path):
-        df = pd.read_csv(path)
-        df = df.where(pd.notnull(df), None)
-        return df.to_dict(orient="records")
-    return []
+    return _csv_records("data/leads_forecasted.csv")
+
 
 @app.get("/api/data/leads")
 def get_leads():
-    path = "data/leads_enriched.csv"
-    if os.path.exists(path):
-        df = pd.read_csv(path)
-        df = df.where(pd.notnull(df), None)
-        return df.to_dict(orient="records")
-    return []
+    return _csv_records("data/leads_enriched.csv")
+
 
 @app.get("/api/data/replies")
 def get_replies():
-    path = "data/replies.csv"
-    if os.path.exists(path):
-        df = pd.read_csv(path)
-        df = df.where(pd.notnull(df), None)
-        return df.to_dict(orient="records")
-    return []
+    return _csv_records("data/replies.csv")
+
 
 @app.get("/")
 def read_root():
