@@ -94,15 +94,57 @@ def fetch_real_replies():
         print("[*] Using mock replies for demo stability...")
         inject_mock_replies()
 
-def inject_mock_replies():
-    """Injects sample replies if real searching fails, to ensure the demo continues."""
+# Sample reply bodies spanning the full hot/warm/cold range, so the
+# forecasting agent has something meaningful to classify in demo mode.
+MOCK_REPLY_BODIES = [
+    "Thanks for reaching out! I'd love to learn more about your AI tools. Can we talk Tuesday?",
+    "Interesting - could you send over pricing and a case study? We're evaluating options this quarter.",
+    "Not interested at this time, but thanks.",
+    "We already work with a vendor here, though it may be worth revisiting next year.",
+    "This is exactly what we've been looking for. Who should I loop in from our side to get started?",
+]
+
+
+def inject_mock_replies(leads_csv="data/leads_enriched.csv"):
+    """Injects sample replies if real searching fails, to ensure the demo continues.
+
+    The bodies are attached to addresses taken from the ACTUAL scraped leads.
+    The previous version used invented addresses (prospect@example.com), which
+    never matched a lead, so `forecast_sales` joined nothing, every lead came
+    back "cold - No reply received yet", and the Groq categorisation never ran
+    at all. The dashboard therefore showed no AI output whatsoever.
+    """
+    recipients = []
+    try:
+        leads_df = pd.read_csv(leads_csv)
+        for row in leads_df["emails"].dropna():
+            # `forecast_sales` only ever looks at the FIRST address of each lead
+            # row, so matching that here is what makes the reply actually join.
+            candidate = str(row).split(",")[0].strip().lower()
+            if "@" in candidate and candidate not in recipients:
+                recipients.append(candidate)
+    except Exception as exc:  # noqa: BLE001
+        print(f"[!] Could not read leads for mock replies: {exc}")
+
+    if not recipients:
+        # No leads available - fall back to placeholder addresses.
+        recipients = ["prospect@example.com", "manager@techstart.io"]
+
+    # Reply to a subset, so the output has a realistic mix of replied and
+    # non-replied leads rather than every single lead answering.
+    replied = recipients[:min(len(recipients), max(2, len(recipients) // 2))]
+
     mock_data = [
-        {"from": "prospect@example.com", "subject": "Re: Let's Connect", "body": "Thanks for reaching out! I'd love to learn more about your AI tools. Can we talk Tuesday?"},
-        {"from": "manager@techstart.io", "subject": "Re: Exploring Synergies", "body": "Not interested at this time, but thanks."}
+        {
+            "from": address,
+            "subject": "Re: Let's Connect: Exploring Synergies",
+            "body": MOCK_REPLY_BODIES[i % len(MOCK_REPLY_BODIES)],
+        }
+        for i, address in enumerate(replied)
     ]
     df = pd.DataFrame(mock_data)
     df.to_csv("data/replies.csv", index=False)
-    print("[✓] Mock replies injected into data/replies.csv")
+    print(f"[✓] Mock replies injected for {len(mock_data)} of {len(recipients)} leads")
 
 if __name__ == "__main__":
     fetch_real_replies()
