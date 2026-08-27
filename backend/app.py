@@ -140,6 +140,18 @@ def read_root():
 
 if __name__ == "__main__":
     import uvicorn
+
     # Hugging Face Spaces uses port 7860 by default
     port = int(os.environ.get("PORT", 7860))
-    uvicorn.run("app:app", host="0.0.0.0", port=port, reload=True)
+
+    # reload=True was enabled in production, where it is actively harmful here:
+    # the reloader watches the working directory, and this app writes its own
+    # CSVs (leads_raw, leads_enriched, leads_scored, replies, leads_forecasted)
+    # into ./data while the pipeline runs. Each write could trigger a restart,
+    # which wipes the in-memory `pipeline_state` back to idle and kills the
+    # BackgroundTask mid-run -- so a pipeline could silently stop partway. It
+    # also ran two processes, doubling memory on a small instance.
+    #
+    # Opt in locally with RELOAD=true when you want auto-reload while editing.
+    reload = os.environ.get("RELOAD", "").lower() in ("1", "true", "yes")
+    uvicorn.run("app:app", host="0.0.0.0", port=port, reload=reload)
